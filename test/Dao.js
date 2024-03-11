@@ -79,8 +79,8 @@ describe('Dao', () => {
 
     it('updates proposal count', async () => {
         expect(await dao.proposalCount()).to.equal(1)
-
     })
+
     it('updates proposal mapping', async () => {
         const proposal = await dao.proposals(1)
 
@@ -89,14 +89,11 @@ describe('Dao', () => {
         expect(proposal.recipient).to.equal(recipient.address) 
 
     })
+
     it('emits a propose event', async () => {
         await expect(transaction).to.emit(dao, 'Propose')
         .withArgs(1, ether(100), recipient.address, investor1.address)
-
     })
-
-
-  
 
   describe('failure', () => {
 
@@ -109,12 +106,9 @@ describe('Dao', () => {
         await expect(dao.connect(user).createProposal('Proposal 1', ether(100), recipient.address)).to.be.reverted
 
     })
-
-    
     })
 
 })
-
     describe('Voting', () => {
         let transaction, result
 
@@ -154,16 +148,10 @@ describe('Dao', () => {
                 transaction = await dao.connect(investor1).vote(1)      
                 await expect(dao.connect(investor1).vote(1)).to.be.reverted
                 
-            })
-
-           
-
-          
-        
-            
+            })    
         })
-
     })
+
     describe('Governance', () => {
         let transaction, result
 
@@ -193,12 +181,12 @@ describe('Dao', () => {
                 expect(await ethers.provider.getBalance(recipient.address)).to.equal(tokens(10100))
             })
 
-
             it('updates the proposal to finalized', async () => {
                 const proposal = await dao.proposals(1)
                 expect(proposal.finalized).to.equal(true)
                 
             })
+
             it('emits a finalize event', async () => { 
                 await expect(transaction).to.emit(dao, 'Finalize')
                 .withArgs(1)
@@ -218,7 +206,6 @@ describe('Dao', () => {
 
                 transaction = await dao.connect(investor2).vote(1)
                 result = await transaction.wait()
-
             })
 
             it('rejects proposal if already finalized', async () => {
@@ -232,8 +219,7 @@ describe('Dao', () => {
                 result = await transaction.wait()
 
                 // Try to finalize again
-                await expect(dao.connect(investor1).finalizeProposal(1)).to.be.reverted
-                
+                await expect(dao.connect(investor1).finalizeProposal(1)).to.be.reverted    
             })   
             
             it('rejects finaliztion if not enough votes', async () => {
@@ -251,7 +237,3 @@ describe('Dao', () => {
     })
 })
   
-
-
-
-

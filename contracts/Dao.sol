@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+
+pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
 import "./Token.sol";
@@ -65,7 +66,6 @@ contract DAO {
 
         require(address(this).balance >= _amount, "DAO: insufficient funds");
         
-
         proposalCount++;
             
         proposals[proposalCount] = Proposal(
@@ -83,10 +83,7 @@ contract DAO {
             _recipient, 
             msg.sender
         );             
-
     }
-
-    
 
     // Vote on proposal
     function vote(uint256 _id) external onlyInvestor {
@@ -104,7 +101,6 @@ contract DAO {
 
         // Emit an event
         emit Vote(_id, msg.sender);
-
     }
 
     function finalizeProposal(uint256 _id) external onlyInvestor {
@@ -122,20 +118,13 @@ contract DAO {
         require(proposal.votes >= quorum, "must reach quorum to finalize proposal");
 
         // Check that contract has enough ether
-        require(address(this).balance >= proposal.amount, "insufficient funds");
-
+        require(address(this).balance >= proposal.amount);
 
         // Transfer funds to recipient
        (bool sent, ) = proposal.recipient.call{value: proposal.amount}("");
        require(sent, "Failed to send Ether");
 
-
-
         // Emit event
-        emit Finalize(_id);
-       
+        emit Finalize(_id);  
     }
-
 }
-
-
